@@ -1,6 +1,7 @@
 import * as XLSX from "xlsx";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { getPublicImageUrl } from "./imageUtils";
 
 type ZoneType = "L1" | "L2" | "L3" | "L4" | "R0" | "R1" | "R2" | "R3" | "R4";
 
@@ -92,8 +93,12 @@ export async function exportDefectsToExcel() {
       })
       .join("\n");
 
+    // Generate public URL for the image
+    const imageUrl = getPublicImageUrl(defect.image_url);
+    const visualEvidence = imageUrl ? imageUrl : "No Image";
+
     return {
-      "Visual Evidence": defect.image_url || "No Image",
+      "Visual Evidence": visualEvidence,
       "Report ID": defect.report_id,
       "Date": format(createdAt, "yyyy-MM-dd"),
       "Time": format(createdAt, "HH:mm:ss"),

@@ -7,7 +7,8 @@ import { ZoneBadge } from "@/components/ZoneBadge";
 import { Button } from "@/components/ui/button";
 import { DefectDetail } from "@/components/DefectDetail";
 import { DefectImage } from "@/components/DefectImage";
-import { Loader2, Calendar, Car, FileText } from "lucide-react";
+import { getPublicImageUrl } from "@/lib/imageUtils";
+import { Loader2, Calendar, Car, FileText, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 
 type ZoneType = "L1" | "L2" | "L3" | "L4" | "R0" | "R1" | "R2" | "R3" | "R4";
@@ -172,12 +173,28 @@ export function DefectList({ showZoneResponse, showManagerAnalysis }: DefectList
                     </div>
                   </div>
                   {defect.image_url && (
-                    <DefectImage
-                      imageUrl={defect.image_url}
-                      alt="Defect"
-                      className="w-20 h-20 object-cover rounded-lg border"
-                      fallbackClassName="w-20 h-20"
-                    />
+                    <div className="relative group">
+                      <DefectImage
+                        imageUrl={defect.image_url}
+                        alt="Defect"
+                        className="w-20 h-20 object-cover rounded-lg border"
+                        fallbackClassName="w-20 h-20"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const publicUrl = getPublicImageUrl(defect.image_url);
+                          if (publicUrl) {
+                            window.open(publicUrl, '_blank');
+                          }
+                        }}
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 text-white text-xs"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                      </Button>
+                    </div>
                   )}
                 </div>
               </CardContent>

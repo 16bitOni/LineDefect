@@ -11,7 +11,8 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { DefectImage } from "@/components/DefectImage";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Calendar, Car, User, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { getPublicImageUrl } from "@/lib/imageUtils";
+import { ArrowLeft, Calendar, Car, User, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 
 type ZoneType = "L1" | "L2" | "L3" | "L4" | "R0" | "R1" | "R2" | "R3" | "R4";
@@ -251,12 +252,30 @@ export function DefectDetail({
         </CardHeader>
         <CardContent className="space-y-4">
           {defect.image_url && (
-            <DefectImage
-              imageUrl={defect.image_url}
-              alt="Defect"
-              className="w-full max-h-64 object-contain rounded-lg border bg-muted"
-              fallbackClassName="w-full h-48"
-            />
+            <div className="space-y-2">
+              <DefectImage
+                imageUrl={defect.image_url}
+                alt="Defect"
+                className="w-full max-h-64 object-contain rounded-lg border bg-muted"
+                fallbackClassName="w-full h-48"
+              />
+              <div className="flex justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const publicUrl = getPublicImageUrl(defect.image_url);
+                    if (publicUrl) {
+                      window.open(publicUrl, '_blank');
+                    }
+                  }}
+                  className="text-xs"
+                >
+                  <ExternalLink className="w-3 h-3 mr-1" />
+                  View Full Image
+                </Button>
+              </div>
+            </div>
           )}
 
           <div className="grid grid-cols-2 gap-4 text-sm">
